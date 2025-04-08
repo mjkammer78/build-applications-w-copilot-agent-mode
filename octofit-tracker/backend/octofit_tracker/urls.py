@@ -17,29 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet
+from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet, api_root
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'teams', TeamViewSet)
-router.register(r'activity', ActivityViewSet)
+router.register(r'activities', ActivityViewSet)
 router.register(r'leaderboard', LeaderboardViewSet)
 router.register(r'workouts', WorkoutViewSet)
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': 'users/',
-        'teams': 'teams/',
-        'activity': 'activity/',
-        'leaderboard': 'leaderboard/',
-        'workouts': 'workouts/'
-    })
-
 urlpatterns = [
     path('', api_root, name='api-root'),  # Root endpoint
-    path("admin/", admin.site.urls),
-    path('', include(router.urls)),
+    path('admin/', admin.site.urls),  # Admin endpoint
+    path('api/', include(router.urls)),  # API endpoint
 ]
